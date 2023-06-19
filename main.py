@@ -4,10 +4,15 @@ import solve, boards
 
 Move = str # type alias for a move (really just a string representing a color)
 
-def play(maxdepth: int = 3, seed: Optional[int] = None):
+def play(maxdepth: int = 3, board_file_name: str = "", seed: Optional[int] = None):
     """Function called by player. Runs the game"""
     board = boards.Board() # instantiate the board
-    board.create_random(seed=seed) # create a (random) board
+    
+    if len(board_file_name) != 0:
+        board.create_from_file(board_file_name)
+    else:
+        board.create_random(seed=seed) # create a (random) board
+
     moves_remaining, opp_moves_remaining = True, True # initialize flags for moves remaining
     board.print_score()
     board.print_board()
@@ -61,7 +66,14 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         maxdepth = int(sys.argv[1])
         seed = None
+
     elif len(sys.argv) == 3:
         maxdepth = int(sys.argv[1])
-        seed = int(sys.argv[2])
-    play(maxdepth=maxdepth, seed=seed)
+        board_file_name = sys.argv[2]
+        seed = None
+
+    elif len(sys.argv) == 4:
+        maxdepth = int(sys.argv[1])
+        board_file_name = bool(sys.argv[2])
+        seed = int(sys.argv[3])
+    play(maxdepth=maxdepth, board_file_name = board_file_name, seed=seed)

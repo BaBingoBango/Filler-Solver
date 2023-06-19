@@ -10,7 +10,35 @@ class Board:
         self.nrows = nrows
         self.board = list() # instantiate the board. Filled in with create_random()
         self.tiles = {'r','g','y','b','p','w'} # the "tiles", represented by their colors 
-        self.tiles_to_colors = {'r':'🟥','g':'🟩','y':'🟨','b':'🟦','p':'🟪','w':'⬜️'} # for printing the board
+        self.tiles_to_colors = {'r':'🟥','g':'🟩','y':'🟨','b':'🟦','p':'🟪','w':'⬛️'} # for printing the board
+
+    def create_from_file(self, filename: str):
+        all_tiles = []
+
+        with open(filename) as f:
+            while True:
+                c = f.read(1)
+                if not c:
+                    print("End of file")
+                    break
+                print("Read a character:", c)
+                if c != "\n": all_tiles.append(c)
+
+        tile_index = 0
+
+        for each_row_index in range(self.nrows):
+            row = list()
+
+            for each_column_index in range(self.ncols):
+                row.append(all_tiles[tile_index])
+                tile_index += 1
+
+            self.board.append(row)
+
+        # Assign corner tiles to players
+        self.player_board = [[None for j in range(self.ncols)] for i in range(self.nrows)] # instantiate player board
+        self.player_board[-1][0] = 1 # bottom left is player 0
+        self.player_board[0][-1] = 0 # top right is player 1
 
     def create_random(self, seed: Optional[int] = None):
         """Create a random board"""
